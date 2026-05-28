@@ -1,0 +1,4 @@
+interface:
+  display_name: "SlideX Slide Builder"
+  short_description: "Create self-contained SlideX HTML slides"
+  default_prompt: "Use $slidex-slide-builder to create a SlideX-compatible self-contained HTML slide deck."

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>アップロードフロー</title>
+    <style>
+      :root {
+        color: #162033;
+        background: #ffffff;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+      }
+      .slide {
+        display: grid;
+        min-height: 100vh;
+        grid-template-columns: 0.9fr 1.1fr;
+        gap: clamp(30px, 5vw, 70px);
+        align-items: center;
+        padding: clamp(38px, 6vw, 86px);
+        background: #fff;
+      }
+      h1 {
+        margin: 0;
+        font-size: clamp(42px, 6.2vw, 82px);
+        line-height: 1.05;
+        letter-spacing: 0;
+      }
+      .lead {
+        margin: 22px 0 0;
+        color: #5a697d;
+        font-size: clamp(20px, 2vw, 29px);
+        line-height: 1.45;
+      }
+      .steps {
+        display: grid;
+        gap: 12px;
+      }
+      .step {
+        display: grid;
+        grid-template-columns: 58px 1fr;
+        gap: 14px;
+        align-items: center;
+      }
+      .step strong {
+        display: grid;
+        width: 58px;
+        height: 58px;
+        place-items: center;
+        border-radius: 8px;
+        background: #174ea6;
+        color: #fff;
+        font-size: 22px;
+      }
+      .step p {
+        margin: 0;
+        border: 1px solid #dbe5ef;
+        border-radius: 8px;
+        padding: 16px 18px;
+        background: #f8fbfe;
+        color: #243449;
+        font-size: clamp(18px, 1.7vw, 24px);
+        font-weight: 720;
+      }
+      @media (max-width: 900px) {
+        .slide {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="slide">
+      <section>
+        <h1>ブラウザはS3へ直接PUTする</h1>
+        <p class="lead">
+          APIは認可、検証、署名付きURL発行、完了時のmetadata生成に集中する。
+        </p>
+      </section>
+      <section class="steps" aria-label="アップロードフロー">
+        <div class="step"><strong>1</strong><p>ファイル選択とクライアント検証</p></div>
+        <div class="step"><strong>2</strong><p>`POST /api/decks` で deckId を確定</p></div>
+        <div class="step"><strong>3</strong><p>署名付き PUT URL を取得</p></div>
+        <div class="step"><strong>4</strong><p>HTMLファイルをS3へアップロード</p></div>
+        <div class="step"><strong>5</strong><p>`complete` で manifest / deck / ogp を生成</p></div>
+      </section>
+    </main>
+  </body>
+</html>

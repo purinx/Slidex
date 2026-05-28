@@ -1,0 +1,113 @@
+[tools]
+node = "22.13.0"
+"npm:pnpm" = "11.3.0"
+terraform = "1.6.6"
+
+[env]
+_.path = ["./node_modules/.bin"]
+
+[tasks.install]
+description = "Install workspace dependencies with pnpm"
+run = "CI=true pnpm install"
+
+[tasks."dev:frontend"]
+description = "Start the Vite frontend dev server"
+run = "pnpm --dir frontend dev --host 127.0.0.1"
+
+[tasks."dev:backend"]
+description = "Start the Hono backend dev server"
+run = "pnpm --dir backend dev"
+
+[tasks.dev]
+description = "Start the frontend and backend dev servers"
+run = "mise run dev:frontend ::: dev:backend"
+
+[tasks."typecheck:frontend"]
+description = "Typecheck the frontend"
+run = "pnpm --dir frontend typecheck"
+
+[tasks."typecheck:backend"]
+description = "Typecheck the backend"
+run = "pnpm --dir backend typecheck"
+
+[tasks.typecheck]
+description = "Typecheck all packages"
+depends = ["typecheck:frontend", "typecheck:backend"]
+
+[tasks."test:frontend"]
+description = "Run frontend tests"
+run = "pnpm --dir frontend test"
+
+[tasks."test:backend"]
+description = "Run backend tests"
+run = "pnpm --dir backend test"
+
+[tasks.test]
+description = "Run all tests"
+depends = ["test:frontend", "test:backend"]
+
+[tasks."build:frontend"]
+description = "Build the frontend"
+run = "pnpm --dir frontend build"
+
+[tasks."build:backend"]
+description = "Build the backend"
+run = "pnpm --dir backend build"
+
+[tasks.build]
+description = "Build frontend and backend"
+depends = ["build:frontend", "build:backend"]
+
+[tasks.check]
+description = "Run typecheck, tests, and builds"
+depends = ["typecheck", "test", "build"]
+
+[tasks."tf:fmt"]
+description = "Format all Terraform files"
+run = "terraform fmt -recursive infra/terraform"
+
+[tasks."tf:init:dev"]
+description = "Initialize Terraform for dev"
+dir = "infra/terraform/environments/dev"
+run = "terraform init"
+
+[tasks."tf:validate:dev"]
+description = "Validate Terraform for dev"
+dir = "infra/terraform/environments/dev"
+depends = ["tf:init:dev"]
+run = "terraform validate"
+
+[tasks."tf:plan:dev"]
+description = "Plan Terraform changes for dev"
+dir = "infra/terraform/environments/dev"
+depends = ["tf:init:dev"]
+run = "terraform plan"
+
+[tasks."tf:apply:dev"]
+description = "Apply Terraform changes for dev"
+dir = "infra/terraform/environments/dev"
+depends = ["tf:init:dev"]
+run = "terraform apply"
+
+[tasks."tf:init:prod"]
+description = "Initialize Terraform for prod"
+dir = "infra/terraform/environments/prod"
+run = "terraform init"
+
+[tasks."tf:validate:prod"]
+description = "Validate Terraform for prod"
+dir = "infra/terraform/environments/prod"
+depends = ["tf:init:prod"]
+run = "terraform validate"
+
+[tasks."tf:plan:prod"]
+description = "Plan Terraform changes for prod"
+dir = "infra/terraform/environments/prod"
+depends = ["tf:init:prod"]
+run = "terraform plan"
+
+[tasks."tf:apply:prod"]
+description = "Apply Terraform changes for prod"
+dir = "infra/terraform/environments/prod"
+depends = ["tf:init:prod"]
+run = "terraform apply"

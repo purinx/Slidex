@@ -1,0 +1,19 @@
+{
+  "name": "slidex",
+  "private": true,
+  "packageManager": "pnpm@11.3.0",
+  "scripts": {
+    "dev:backend": "mise run dev:backend",
+    "dev:frontend": "mise run dev:frontend",
+    "build": "mise run build",
+    "build:backend": "mise run build:backend",
+    "build:frontend": "mise run build:frontend",
+    "check": "mise run check",
+    "test": "mise run test",
+    "test:backend": "mise run test:backend",
+    "test:frontend": "mise run test:frontend",
+    "typecheck": "mise run typecheck",
+    "typecheck:backend": "mise run typecheck:backend",
+    "typecheck:frontend": "mise run typecheck:frontend"
+  }
+}

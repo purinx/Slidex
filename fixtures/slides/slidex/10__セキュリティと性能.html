@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>セキュリティと性能</title>
+    <style>
+      :root {
+        color: #172033;
+        background: #fff;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+      }
+      .slide {
+        display: grid;
+        min-height: 100vh;
+        grid-template-columns: 0.85fr 1.15fr;
+        gap: clamp(32px, 5vw, 72px);
+        align-items: center;
+        padding: clamp(38px, 6vw, 86px);
+        background: linear-gradient(180deg, #ffffff, #f5f8fc);
+      }
+      h1 {
+        margin: 0;
+        font-size: clamp(42px, 6.2vw, 82px);
+        line-height: 1.05;
+        letter-spacing: 0;
+      }
+      .lead {
+        margin: 22px 0 0;
+        color: #5a697d;
+        font-size: clamp(20px, 2vw, 29px);
+        line-height: 1.45;
+      }
+      .matrix {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      .tile {
+        min-height: 190px;
+        border: 1px solid #d8e3ee;
+        border-radius: 8px;
+        padding: 20px;
+        background: #fff;
+      }
+      .tile h2 {
+        margin: 0 0 12px;
+        color: #174ea6;
+        font-size: clamp(22px, 2.2vw, 32px);
+      }
+      .tile p {
+        margin: 0;
+        color: #58687d;
+        font-size: clamp(16px, 1.5vw, 21px);
+        line-height: 1.45;
+      }
+      @media (max-width: 900px) {
+        .slide {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 620px) {
+        .matrix {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="slide">
+      <section>
+        <h1>信頼境界はAPIとS3キーで守る</h1>
+        <p class="lead">
+          HTML表示はiframeで分離し、アップロード経路では認可、allowlist、サイズ制限、パス正規化を行う。
+        </p>
+      </section>
+      <section class="matrix" aria-label="セキュリティと性能の要点">
+        <article class="tile">
+          <h2>iframe分離</h2>
+          <p>ホストアプリのCSS/JSとスライドHTMLを分ける。将来はsandboxや別オリジンを検討する。</p>
+        </article>
+        <article class="tile">
+          <h2>簡易認可</h2>
+          <p>初期スコープは管理用トークン。AWS secretはフロントエンドに埋め込まない。</p>
+        </article>
+        <article class="tile">
+          <h2>最小取得</h2>
+          <p>初期表示ではmanifestまたは一覧APIのみ取得し、HTMLは表示時に読み込む。</p>
+        </article>
+        <article class="tile">
+          <h2>キャッシュ</h2>
+          <p>manifestとOGP HTMLはCDNやedgeで短時間キャッシュできる設計にする。</p>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>技術スタックとホスティング</title>
+    <style>
+      :root {
+        color: #172033;
+        background: #101723;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+      }
+      .slide {
+        display: grid;
+        min-height: 100vh;
+        gap: clamp(28px, 4vw, 50px);
+        align-content: center;
+        padding: clamp(38px, 6vw, 86px);
+        background: #101723;
+        color: #f8fbff;
+      }
+      h1 {
+        margin: 0;
+        max-width: 1100px;
+        font-size: clamp(42px, 6.2vw, 82px);
+        line-height: 1.05;
+        letter-spacing: 0;
+      }
+      .stack {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+      }
+      .item {
+        display: grid;
+        min-height: 220px;
+        align-content: space-between;
+        border: 1px solid rgb(255 255 255 / 18%);
+        border-radius: 8px;
+        padding: 20px;
+        background: rgb(255 255 255 / 8%);
+      }
+      .item h2 {
+        margin: 0;
+        color: #fff;
+        font-size: clamp(24px, 2.5vw, 36px);
+      }
+      .item p {
+        margin: 18px 0 0;
+        color: #b7c4d5;
+        font-size: clamp(16px, 1.5vw, 21px);
+        line-height: 1.45;
+      }
+      .artifact {
+        border-radius: 8px;
+        padding: 18px 20px;
+        background: #f8fbff;
+        color: #172033;
+        font-size: clamp(18px, 2vw, 28px);
+        font-weight: 800;
+      }
+      @media (max-width: 980px) {
+        .stack {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      @media (max-width: 620px) {
+        .stack {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="slide">
+      <h1>Vite中心の軽量構成を、Amplify computeで本番化する</h1>
+      <section class="stack" aria-label="技術スタック">
+        <article class="item">
+          <h2>React + TS</h2>
+          <p>ビューア、状態、アップロードUIを小さなコンポーネントで構成する。</p>
+        </article>
+        <article class="item">
+          <h2>Hono</h2>
+          <p>アップロードAPI、manifest生成、OGP HTMLシェル返却を担う。</p>
+        </article>
+        <article class="item">
+          <h2>AWS SDK v3</h2>
+          <p>S3署名付きURL、HeadObject、manifest書き込みに利用する。</p>
+        </article>
+        <article class="item">
+          <h2>Terraform</h2>
+          <p>Amplify Hosting、S3、IAMを環境ごとに管理する。</p>
+        </article>
+      </section>
+      <div class="artifact">.amplify-hosting/static + .amplify-hosting/compute/default</div>
+    </main>
+  </body>
+</html>

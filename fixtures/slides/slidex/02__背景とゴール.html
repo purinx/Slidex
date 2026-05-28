@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>背景とゴール</title>
+    <style>
+      :root {
+        color: #162033;
+        background: #fbfcfe;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+      }
+      .slide {
+        display: grid;
+        min-height: 100vh;
+        grid-template-columns: 0.85fr 1.15fr;
+        gap: clamp(32px, 5vw, 72px);
+        align-items: center;
+        padding: clamp(40px, 7vw, 92px);
+        background: linear-gradient(90deg, #f7fbff 0%, #f7fbff 46%, #ffffff 46%);
+      }
+      h1 {
+        margin: 0;
+        font-size: clamp(42px, 6.4vw, 84px);
+        line-height: 1.05;
+        letter-spacing: 0;
+      }
+      .lead {
+        margin: 22px 0 0;
+        color: #5a697d;
+        font-size: clamp(20px, 2.1vw, 30px);
+        line-height: 1.5;
+      }
+      .goals {
+        display: grid;
+        gap: 18px;
+      }
+      .goal {
+        display: grid;
+        grid-template-columns: 44px 1fr;
+        gap: 16px;
+        align-items: start;
+        border: 1px solid #dae4ef;
+        border-radius: 8px;
+        padding: 18px;
+        background: #fff;
+      }
+      .goal span {
+        display: grid;
+        width: 44px;
+        height: 44px;
+        place-items: center;
+        border-radius: 8px;
+        background: #0f8f6b;
+        color: #fff;
+        font-weight: 850;
+      }
+      .goal h2 {
+        margin: 0 0 6px;
+        font-size: clamp(20px, 2vw, 28px);
+      }
+      .goal p {
+        margin: 0;
+        color: #5a697d;
+        font-size: clamp(16px, 1.5vw, 21px);
+        line-height: 1.45;
+      }
+      @media (max-width: 860px) {
+        .slide {
+          grid-template-columns: 1fr;
+          background: #fbfcfe;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="slide">
+      <section>
+        <h1>HTMLスライドの共有を、配置だけで成立させる</h1>
+        <p class="lead">
+          ファイル一覧取得、ページ順、タイトル、環境差分、共有URLをアプリ側で吸収する。
+        </p>
+      </section>
+      <section class="goals" aria-label="主要ゴール">
+        <article class="goal">
+          <span>1</span>
+          <div>
+            <h2>ローカル即時確認</h2>
+            <p>Vite dev server が指定ディレクトリを列挙し、HTMLをiframeで表示する。</p>
+          </div>
+        </article>
+        <article class="goal">
+          <span>2</span>
+          <div>
+            <h2>本番共有</h2>
+            <p>S3上のmanifestからスライド一覧を構築し、URLで特定スライドを共有できる。</p>
+          </div>
+        </article>
+        <article class="goal">
+          <span>3</span>
+          <div>
+            <h2>アップロードとOGP</h2>
+            <p>ブラウザからS3へアップロードし、manifestと共有用メタデータを生成する。</p>
+          </div>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>
