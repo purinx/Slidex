@@ -357,32 +357,16 @@ html[data-slide-transition="previous"]::view-transition-new(slide-stage) {
   background: #fff5f2;
 }
 
-.dialogBackdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 40;
-  display: grid;
-  place-items: center;
-  padding: 18px;
-  background: rgb(15 22 33 / 52%);
-}
-
-.uploadDialog {
+.uploadForm {
   display: flex;
-  width: min(760px, 100%);
-  max-height: min(840px, calc(100vh - 36px));
+  width: 100%;
+  max-height: none;
   flex-direction: column;
   gap: 16px;
   overflow: auto;
   border-radius: 8px;
   padding: 18px;
   background: #fbfcfe;
-  box-shadow: 0 24px 90px rgb(0 0 0 / 32%);
-}
-
-.uploadDialog.inline {
-  width: 100%;
-  max-height: none;
   box-shadow: none;
 }
 
@@ -461,8 +445,6 @@ html[data-slide-transition="previous"]::view-transition-new(slide-stage) {
 
 .ogpPreview {
   display: grid;
-  grid-template-columns: 132px 1fr;
-  gap: 14px;
   overflow: hidden;
   border: 1px solid #d8e1ec;
   border-radius: 8px;
@@ -471,11 +453,10 @@ html[data-slide-transition="previous"]::view-transition-new(slide-stage) {
 
 .ogpImage {
   display: grid;
-  min-height: 118px;
+  aspect-ratio: 1200 / 630;
   place-items: center;
-  background: #1f2937;
-  color: #fff;
-  font-weight: 800;
+  overflow: hidden;
+  background: #fff;
 }
 
 .ogpImage img {
@@ -486,7 +467,8 @@ html[data-slide-transition="previous"]::view-transition-new(slide-stage) {
 
 .ogpPreview div:last-child {
   min-width: 0;
-  padding: 12px 12px 12px 0;
+  border-top: 1px solid #d8e1ec;
+  padding: 12px;
 }
 
 .ogpPreview h3 {

@@ -2,16 +2,11 @@ import { useMemo, useState } from "react";
 import { OgpPreview } from "./OgpPreview";
 import { useUpload } from "../hooks/useUpload";
 import type { CompleteUploadResponse } from "../data/uploadClient";
+import { parseSlideFileName } from "../domain/slideFile";
 
-export function UploadDialog({
-  open,
-  onClose,
-  mode = "dialog",
+export function UploadForm({
   onCompleted
 }: {
-  open: boolean;
-  onClose: () => void;
-  mode?: "dialog" | "inline";
   onCompleted?: (result: CompleteUploadResponse) => void;
 }) {
   const upload = useUpload({ onCompleted });
@@ -23,23 +18,22 @@ export function UploadDialog({
 
   const submitErrors = submitAttempted ? collectSubmitErrors(title, upload.validation) : [];
   const uploadBusy = ["requestingUploadUrls", "uploading", "completing"].includes(upload.uploadState);
+  const previewDeckId = deckId.trim() || "deck-id";
+  const previewSlideCount = upload.validation?.candidates.filter((candidate) => parseSlideFileName(candidate.path)).length;
+  const previewMetadataLine =
+    typeof previewSlideCount === "number" && previewSlideCount > 0
+      ? `${previewSlideCount} ${previewSlideCount === 1 ? "slide" : "slides"} · ${previewDeckId}`
+      : undefined;
   const shareUrl = useMemo(() => {
     if (upload.completed?.deckUrl) {
       return new URL(upload.completed.deckUrl, window.location.origin).toString();
     }
-    const candidate = deckId.trim() || "deck-id";
-    return new URL(`/deck/${candidate}`, window.location.origin).toString();
-  }, [deckId, upload.completed?.deckUrl]);
+    return new URL(`/deck/${previewDeckId}`, window.location.origin).toString();
+  }, [previewDeckId, upload.completed?.deckUrl]);
 
-  if (!open) {
-    return null;
-  }
-
-  const panel = (
+  return (
     <section
-      className={mode === "inline" ? "uploadDialog inline" : "uploadDialog"}
-      role={mode === "dialog" ? "dialog" : undefined}
-      aria-modal={mode === "dialog" ? "true" : undefined}
+      className="uploadForm"
       aria-labelledby="upload-title"
     >
         <div className="panelHeader">
@@ -47,11 +41,6 @@ export function UploadDialog({
             <h2 id="upload-title">Upload deck</h2>
             <p>{upload.uploadState}</p>
           </div>
-          {mode === "dialog" ? (
-            <button type="button" className="iconButton" onClick={onClose} aria-label="Close upload dialog">
-              Close
-            </button>
-          ) : null}
         </div>
 
         <div className="formGrid">
@@ -129,6 +118,7 @@ export function UploadDialog({
           title={title || "SlideX Deck"}
           description={description}
           imageUrl={defaultOgImage || undefined}
+          metadataLine={previewMetadataLine}
           shareUrl={shareUrl}
         />
 
@@ -166,16 +156,6 @@ export function UploadDialog({
           </button>
         </div>
       </section>
-  );
-
-  if (mode === "inline") {
-    return panel;
-  }
-
-  return (
-    <div className="dialogBackdrop" role="presentation">
-      {panel}
-    </div>
   );
 }
 
