@@ -35,7 +35,8 @@ locals {
                   { "path": "/api/*", "target": { "kind": "Compute", "src": "default" } },
                   { "path": "/deck/*", "target": { "kind": "Compute", "src": "default" } },
                   { "path": "/assets/*", "target": { "kind": "Static" } },
-                  { "path": "/*", "target": { "kind": "Compute", "src": "default" } }
+                  { "path": "/*.*", "target": { "kind": "Static" } },
+                  { "path": "/*", "target": { "kind": "Static" } }
                 ],
                 "computeResources": [
                   { "name": "default", "runtime": "nodejs20.x", "entrypoint": "server.js" }
@@ -67,6 +68,18 @@ resource "aws_amplify_app" "this" {
   custom_rule {
     source = "/deck/<*>"
     target = "/deck/<*>"
+    status = "200"
+  }
+
+  custom_rule {
+    source = "/admin"
+    target = "/index.html"
+    status = "200"
+  }
+
+  custom_rule {
+    source = "/admin/<*>"
+    target = "/index.html"
     status = "200"
   }
 
