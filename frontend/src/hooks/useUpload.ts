@@ -20,7 +20,7 @@ export type UploadState =
   | "completed"
   | "failed";
 
-export function useUpload() {
+export function useUpload(options?: { onCompleted?: (result: CompleteUploadResponse) => void }) {
   const [uploadState, setUploadState] = useState<UploadState>("selecting");
   const [validation, setValidation] = useState<UploadValidationResult>();
   const [progress, setProgress] = useState(0);
@@ -93,6 +93,7 @@ export function useUpload() {
         defaultOgImage: input.defaultOgImage
       }, input.adminToken);
       setCompleted(result);
+      options?.onCompleted?.(result);
       setProgress(100);
       setUploadState("completed");
     } catch (uploadError) {

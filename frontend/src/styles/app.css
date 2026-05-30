@@ -538,7 +538,7 @@ html[data-slide-transition="previous"]::view-transition-new(slide-stage) {
 }
 
 .adminHeader h1 {
-  margin: 14px 0 6px;
+  margin: 0 0 6px;
   color: #162033;
   font-size: 32px;
 }

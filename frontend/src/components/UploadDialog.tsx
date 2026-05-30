@@ -1,24 +1,29 @@
 import { useMemo, useState } from "react";
 import { OgpPreview } from "./OgpPreview";
 import { useUpload } from "../hooks/useUpload";
+import type { CompleteUploadResponse } from "../data/uploadClient";
 
 export function UploadDialog({
   open,
   onClose,
-  mode = "dialog"
+  mode = "dialog",
+  onCompleted
 }: {
   open: boolean;
   onClose: () => void;
   mode?: "dialog" | "inline";
+  onCompleted?: (result: CompleteUploadResponse) => void;
 }) {
-  const upload = useUpload();
+  const upload = useUpload({ onCompleted });
   const [title, setTitle] = useState("");
   const [deckId, setDeckId] = useState("");
   const [description, setDescription] = useState("");
   const [defaultOgImage, setDefaultOgImage] = useState("");
   const [adminToken, setAdminToken] = useState("");
+  const [submitAttempted, setSubmitAttempted] = useState(false);
 
-  const canUpload = Boolean(title.trim()) && Boolean(adminToken.trim()) && Boolean(upload.validation?.valid);
+  const submitErrors = submitAttempted ? collectSubmitErrors(title, adminToken, upload.validation) : [];
+  const uploadBusy = ["requestingUploadUrls", "uploading", "completing"].includes(upload.uploadState);
   const shareUrl = useMemo(() => {
     if (upload.completed?.deckUrl) {
       return new URL(upload.completed.deckUrl, window.location.origin).toString();
@@ -112,6 +117,14 @@ export function UploadDialog({
           </div>
         ) : null}
 
+        {submitErrors.length > 0 ? (
+          <div className="validationBox invalid" role="alert">
+            {submitErrors.map((error) => (
+              <p key={error}>{error}</p>
+            ))}
+          </div>
+        ) : null}
+
         {upload.error ? (
           <div className="validationBox invalid" role="alert">
             {upload.error}
@@ -130,22 +143,35 @@ export function UploadDialog({
         />
 
         <div className="dialogActions">
-          <button type="button" className="iconButton" onClick={upload.reset}>
+          <button
+            type="button"
+            className="iconButton"
+            onClick={() => {
+              setSubmitAttempted(false);
+              upload.reset();
+            }}
+          >
             Reset
           </button>
           <button
             type="button"
             className="primaryButton"
-            disabled={!canUpload || upload.uploadState === "uploading"}
-            onClick={() =>
+            disabled={uploadBusy}
+            onClick={() => {
+              setSubmitAttempted(true);
+              const errors = collectSubmitErrors(title, adminToken, upload.validation);
+              if (errors.length > 0) {
+                return;
+              }
+
               void upload.upload({
                 title: title.trim(),
                 adminToken: adminToken.trim(),
                 deckId: deckId.trim() || undefined,
                 description: description.trim() || undefined,
                 defaultOgImage: defaultOgImage.trim() || undefined
-              })
-            }
+              });
+            }}
           >
             Upload
           </button>
@@ -162,6 +188,30 @@ export function UploadDialog({
       {panel}
     </div>
   );
+}
+
+function collectSubmitErrors(
+  title: string,
+  adminToken: string,
+  validation: ReturnType<typeof useUpload>["validation"]
+) {
+  const errors: string[] = [];
+
+  if (!title.trim()) {
+    errors.push("Deck name is required.");
+  }
+
+  if (!adminToken.trim()) {
+    errors.push("Admin token is required.");
+  }
+
+  if (!validation) {
+    errors.push("Select files or a directory.");
+  } else if (!validation.valid) {
+    errors.push("Selected files are not valid.");
+  }
+
+  return errors;
 }
 
 function formatBytes(bytes: number) {
