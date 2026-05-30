@@ -69,6 +69,8 @@ describe("manifest", () => {
 
     expect(manifest.slides.map((slide) => slide.orderText)).toEqual(["01", "02"]);
     expect(manifest.slides[0]?.url).toBe("/api/decks/demo/files/01__First.html");
+    expect(manifest.ogImage).toBe("/api/decks/demo/files/og/deck.svg");
+    expect("ogImage" in manifest.slides[0]!).toBe(false);
   });
 });
 

@@ -86,7 +86,14 @@ export function UploadDialog({
               type="file"
               multiple
               {...({ webkitdirectory: "" } as Record<string, string>)}
-              onChange={(event) => upload.selectFiles(Array.from(event.target.files ?? []))}
+              onChange={(event) => {
+                const files = Array.from(event.target.files ?? []);
+                const directoryName = inferDirectoryName(files);
+                if (directoryName) {
+                  setTitle(directoryName);
+                }
+                upload.selectFiles(files);
+              }}
             />
           </label>
         </div>
@@ -167,4 +174,14 @@ function formatBytes(bytes: number) {
   }
 
   return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+}
+
+function inferDirectoryName(files: File[]) {
+  const roots = new Set(
+    files
+      .map((file) => file.webkitRelativePath.split("/")[0])
+      .filter((root): root is string => Boolean(root))
+  );
+
+  return roots.size === 1 ? [...roots][0] : undefined;
 }

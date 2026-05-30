@@ -2,6 +2,7 @@ tmp
 node_modules
 .pnpm-store
 dist
+frontend/.slidex-og
 .env.local
 .env.*.local
 .terraform

@@ -18,7 +18,7 @@ export function buildOgpMetadata(input: {
 }) {
   const deckDescription =
     input.metadata.description || `${input.manifest.title} - ${input.manifest.slides.length} slides`;
-  const deckImage = input.metadata.defaultOgImage || input.defaultImage;
+  const deckImage = input.metadata.defaultOgImage || input.manifest.ogImage || input.defaultImage;
 
   return {
     deck: {
@@ -32,7 +32,7 @@ export function buildOgpMetadata(input: {
         {
           title: slide.title,
           description: input.metadata.description || `${input.metadata.title} - ${slide.title}`,
-          image: slide.ogImage || deckImage
+          image: deckImage
         }
       ])
     )

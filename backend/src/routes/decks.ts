@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { createDeckId, validateDeckId } from "../domain/deckId.js";
 import { badRequest, notFound, serverError } from "../domain/errors.js";
 import { buildDeckMetadata, buildManifest, type DeckMetadataInput, type SlideManifest } from "../domain/manifest.js";
+import { DECK_OG_IMAGE_PATH, renderDeckOgImageSvg } from "../domain/ogImage.js";
 import { buildOgpMetadata } from "../domain/ogp.js";
 import { objectKey } from "../domain/paths.js";
 import { validateUploadFiles, type UploadFileDescriptor } from "../domain/uploadValidation.js";
@@ -99,6 +100,16 @@ export function createDeckRoutes(deps: DeckRouteDeps) {
 
     try {
       await Promise.all([
+        putText(
+          deps,
+          objectKey(deps.env.slidesPrefix, deckId, DECK_OG_IMAGE_PATH),
+          renderDeckOgImageSvg({
+            deckTitle: metadata.title,
+            description: metadata.description,
+            metadataLine: deckMetadataLine(manifest.slides.length, deckId)
+          }),
+          "image/svg+xml; charset=utf-8"
+        ),
         putJson(deps, objectKey(deps.env.slidesPrefix, deckId, "deck.json"), deckMetadata),
         putJson(deps, objectKey(deps.env.slidesPrefix, deckId, "manifest.json"), manifest),
         putJson(deps, objectKey(deps.env.slidesPrefix, deckId, "ogp.json"), ogp)
@@ -158,6 +169,10 @@ function validateMetadata(metadata?: DeckMetadataInput) {
   };
 }
 
+function deckMetadataLine(slideCount: number, deckId: string) {
+  return `${slideCount} ${slideCount === 1 ? "slide" : "slides"} · ${deckId}`;
+}
+
 function requireString(value: unknown, field: string) {
   if (typeof value !== "string" || value.trim() === "") {
     throw badRequest("INVALID_METADATA", `${field} is required.`);
@@ -187,11 +202,11 @@ async function readJson<T>(request: Request) {
 }
 
 async function putJson(deps: DeckRouteDeps, key: string, value: unknown) {
-  await deps.storage.putObject({
-    key,
-    body: JSON.stringify(value, null, 2),
-    contentType: "application/json; charset=utf-8"
-  });
+  await putText(deps, key, JSON.stringify(value, null, 2), "application/json; charset=utf-8");
+}
+
+async function putText(deps: DeckRouteDeps, key: string, body: string, contentType: string) {
+  await deps.storage.putObject({ key, body, contentType });
 }
 
 async function getJson<T>(deps: DeckRouteDeps, key: string, code: string) {

@@ -86,8 +86,10 @@ describe("backend app", () => {
     expect(manifest.status).toBe(200);
     expect(await manifest.json()).toMatchObject({
       deckId: "demo",
+      ogImage: "/api/decks/demo/files/og/deck.svg",
       slides: [{ order: 1, title: "Intro" }]
     });
+    expect(await storage.getObjectText("decks/demo/og/deck.svg")).toContain("<svg");
   });
 
   it("returns OGP HTML shell for deck routes", async () => {

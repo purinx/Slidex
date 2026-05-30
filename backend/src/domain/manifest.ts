@@ -1,6 +1,7 @@
 import type { NormalizedUploadFile } from "./uploadValidation.js";
 import { objectKey, encodePath } from "./paths.js";
 import { parseSlideFileName } from "./slideFile.js";
+import { DECK_OG_IMAGE_PATH } from "./ogImage.js";
 
 export type DeckMetadataInput = {
   title: string;
@@ -28,6 +29,7 @@ export type SlideManifest = {
   deckId: string;
   title: string;
   description?: string;
+  ogImage?: string;
   slides: Slide[];
 };
 
@@ -72,6 +74,7 @@ export function buildManifest(input: {
     deckId: input.deckId,
     title: input.metadata.title,
     description: input.metadata.description,
+    ogImage: `/api/decks/${encodeURIComponent(input.deckId)}/files/${encodePath(DECK_OG_IMAGE_PATH)}`,
     slides
   };
 }

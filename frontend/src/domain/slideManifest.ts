@@ -17,15 +17,26 @@ export type SlideManifest = {
   deckId?: string;
   title: string;
   description?: string;
+  ogImage?: string;
   slides: Slide[];
   warnings: SlideWarning[];
   source: "local" | "api" | "s3";
+};
+
+export type DeckSummary = {
+  deckId: string;
+  title: string;
+  description?: string;
+  ogImage?: string;
+  slideCount: number;
+  warnings?: SlideWarning[];
 };
 
 export type RemoteManifest = {
   deckId?: string;
   title?: string;
   description?: string;
+  ogImage?: string;
   slides?: Array<{
     order?: number;
     title?: string;

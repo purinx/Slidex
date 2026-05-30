@@ -124,6 +124,7 @@ export function normalizeRemoteManifest(
     deckId: manifest.deckId,
     title: manifest.title || "SlideX Deck",
     description: manifest.description,
+    ogImage: manifest.ogImage,
     slides: slides.sort((a, b) => a.order - b.order),
     warnings,
     source

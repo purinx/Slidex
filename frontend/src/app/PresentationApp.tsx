@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { flushSync } from "react-dom";
-import { SlideInfo } from "../components/SlideInfo";
 import { SlideViewer } from "../components/SlideViewer";
 import { useDeck } from "../hooks/useDeck";
 import { useKeyboardNavigation } from "../hooks/useKeyboardNavigation";
@@ -114,12 +113,6 @@ export function PresentationApp() {
       <SlideViewer
         slide={currentSlide}
         onHorizontalScroll={handleHorizontalScroll}
-      />
-
-      <SlideInfo
-        title={currentSlide?.title ?? deck?.title ?? "SlideX"}
-        position={currentIndex >= 0 ? currentIndex + 1 : 0}
-        total={slides.length}
       />
 
       {statusMessage ? (
