@@ -18,10 +18,6 @@ export function badRequest(code: string, message: string, details?: ErrorDetails
   return new AppError(400, code, message, details);
 }
 
-export function unauthorized(message = "Authorization is required.") {
-  return new AppError(401, "UNAUTHORIZED", message);
-}
-
 export function notFound(code: string, message: string, details?: ErrorDetails) {
   return new AppError(404, code, message, details);
 }

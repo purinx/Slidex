@@ -8,7 +8,6 @@ import { objectKey } from "../domain/paths.js";
 import { validateUploadFiles, type UploadFileDescriptor } from "../domain/uploadValidation.js";
 import type { Env } from "../infra/env.js";
 import type { ObjectStorage } from "../infra/storage.js";
-import { requireAdminAuth } from "./auth.js";
 
 export type DeckRouteDeps = {
   env: Env;
@@ -17,9 +16,8 @@ export type DeckRouteDeps = {
 
 export function createDeckRoutes(deps: DeckRouteDeps) {
   const app = new Hono();
-  const admin = requireAdminAuth(deps.env);
 
-  app.post("/", admin, async (c) => {
+  app.post("/", async (c) => {
     const body = await readJson<CreateDeckBody>(c.req.raw);
     const title = requireString(body.title, "title");
     const deckId = body.deckId ? validateDeckId(body.deckId) : createDeckId(title);
@@ -30,7 +28,7 @@ export function createDeckRoutes(deps: DeckRouteDeps) {
     });
   });
 
-  app.post("/:deckId/uploads", admin, async (c) => {
+  app.post("/:deckId/uploads", async (c) => {
     const deckId = validateDeckId(c.req.param("deckId"));
     const body = await readJson<{ files?: UploadFileDescriptor[] }>(c.req.raw);
     const files = validateUploadFiles(body.files ?? [], uploadLimits(deps.env));
@@ -62,7 +60,7 @@ export function createDeckRoutes(deps: DeckRouteDeps) {
     });
   });
 
-  app.post("/:deckId/complete", admin, async (c) => {
+  app.post("/:deckId/complete", async (c) => {
     const deckId = validateDeckId(c.req.param("deckId"));
     const body = await readJson<CompleteUploadBody>(c.req.raw);
     const metadata = validateMetadata(body.metadata);

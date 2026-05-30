@@ -32,11 +32,11 @@ export type CompleteUploadResponse = {
   slides: number;
 };
 
-export async function createDeck(input: CreateDeckRequest, adminToken: string) {
-  return apiFetch<CreateDeckResponse>("/api/decks", jsonRequest(input, adminToken));
+export async function createDeck(input: CreateDeckRequest) {
+  return apiFetch<CreateDeckResponse>("/api/decks", jsonRequest(input));
 }
 
-export async function requestUploadUrls(deckId: string, candidates: UploadCandidate[], adminToken: string) {
+export async function requestUploadUrls(deckId: string, candidates: UploadCandidate[]) {
   return apiFetch<UploadUrlsResponse>(
     `/api/decks/${encodeURIComponent(deckId)}/uploads`,
     jsonRequest({
@@ -45,15 +45,14 @@ export async function requestUploadUrls(deckId: string, candidates: UploadCandid
         size: candidate.file.size,
         contentType: candidate.contentType
       }))
-    }, adminToken)
+    })
   );
 }
 
 export async function completeUpload(
   deckId: string,
   candidates: UploadCandidate[],
-  metadata: { title: string; description?: string; defaultOgImage?: string },
-  adminToken: string
+  metadata: { title: string; description?: string; defaultOgImage?: string }
 ) {
   return apiFetch<CompleteUploadResponse>(
     `/api/decks/${encodeURIComponent(deckId)}/complete`,
@@ -64,7 +63,7 @@ export async function completeUpload(
         contentType: candidate.contentType
       })),
       metadata
-    }, adminToken)
+    })
   );
 }
 
@@ -97,12 +96,11 @@ export function putFileToSignedUrl(
   });
 }
 
-function jsonRequest(body: unknown, adminToken: string): RequestInit {
+function jsonRequest(body: unknown): RequestInit {
   return {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${adminToken}`
+      "Content-Type": "application/json"
     },
     body: JSON.stringify(body)
   };

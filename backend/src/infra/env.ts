@@ -6,7 +6,6 @@ export type Env = {
   slidesBucketName: string;
   slidesPrefix: string;
   s3PublicBaseUrl?: string;
-  uploadAdminToken?: string;
   uploadMaxFileSize: number;
   uploadMaxDeckSize: number;
   ogpDefaultImageUrl?: string;
@@ -20,7 +19,6 @@ export function readEnv(source: NodeJS.ProcessEnv = process.env): Env {
     slidesBucketName: source.SLIDES_BUCKET_NAME || source.VITE_S3_BUCKET_NAME || "",
     slidesPrefix: source.SLIDES_PREFIX || source.VITE_S3_PREFIX || "decks",
     s3PublicBaseUrl: trimTrailingSlash(source.S3_PUBLIC_BASE_URL || source.VITE_S3_PUBLIC_BASE_URL),
-    uploadAdminToken: source.UPLOAD_ADMIN_TOKEN,
     uploadMaxFileSize: readMegabytes(source.UPLOAD_MAX_FILE_SIZE_MB, 20),
     uploadMaxDeckSize: readMegabytes(source.UPLOAD_MAX_DECK_SIZE_MB, 200),
     ogpDefaultImageUrl: source.OGP_DEFAULT_IMAGE_URL,

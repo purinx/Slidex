@@ -405,9 +405,6 @@ OGP はクローラーが JavaScript 実行前に読むため、静的な Vite S
   - アップロード API と OGP API のベース URL。
   - 例: `https://api.slides.example.com`
   - Amplify Hosting compute で同一オリジン運用する場合は未指定または空文字にできる。
-- `UPLOAD_ADMIN_TOKEN`
-  - アップロード API の簡易認可トークン。
-  - サーバー側のみで参照し、フロントエンドビルドには含めない。
 - `OGP_DEFAULT_IMAGE_URL`
   - デッキまたはスライドに OGP 画像が指定されていない場合のデフォルト画像。
 
@@ -640,7 +637,6 @@ OGP はクローラーが JavaScript 実行前に読むため、静的な Vite S
 | `VITE_S3_PREFIX` | 任意 | prod | バケット内プレフィックス |
 | `VITE_S3_PUBLIC_BASE_URL` | 推奨 | prod | CloudFront などの公開ベース URL |
 | `VITE_API_BASE_URL` | 任意 | prod | アップロード API のベース URL。同一オリジンの場合は未指定 |
-| `UPLOAD_ADMIN_TOKEN` | 本番で必須 | server | アップロード API の簡易認可トークン |
 | `UPLOAD_MAX_FILE_SIZE_MB` | 任意 | server | 1 ファイルあたりのアップロード上限 |
 | `UPLOAD_MAX_DECK_SIZE_MB` | 任意 | server | 1 デッキあたりの総容量上限 |
 | `OGP_DEFAULT_IMAGE_URL` | 推奨 | server | OGP 画像未指定時のデフォルト画像 |

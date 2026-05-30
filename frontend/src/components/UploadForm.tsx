@@ -19,10 +19,9 @@ export function UploadDialog({
   const [deckId, setDeckId] = useState("");
   const [description, setDescription] = useState("");
   const [defaultOgImage, setDefaultOgImage] = useState("");
-  const [adminToken, setAdminToken] = useState("");
   const [submitAttempted, setSubmitAttempted] = useState(false);
 
-  const submitErrors = submitAttempted ? collectSubmitErrors(title, adminToken, upload.validation) : [];
+  const submitErrors = submitAttempted ? collectSubmitErrors(title, upload.validation) : [];
   const uploadBusy = ["requestingUploadUrls", "uploading", "completing"].includes(upload.uploadState);
   const shareUrl = useMemo(() => {
     if (upload.completed?.deckUrl) {
@@ -63,15 +62,6 @@ export function UploadDialog({
           <label>
             Deck ID
             <input value={deckId} onChange={(event) => setDeckId(event.target.value)} placeholder="optional" />
-          </label>
-          <label className="wideField">
-            Admin token
-            <input
-              type="password"
-              value={adminToken}
-              onChange={(event) => setAdminToken(event.target.value)}
-              autoComplete="off"
-            />
           </label>
           <label className="wideField">
             Description
@@ -159,14 +149,13 @@ export function UploadDialog({
             disabled={uploadBusy}
             onClick={() => {
               setSubmitAttempted(true);
-              const errors = collectSubmitErrors(title, adminToken, upload.validation);
+              const errors = collectSubmitErrors(title, upload.validation);
               if (errors.length > 0) {
                 return;
               }
 
               void upload.upload({
                 title: title.trim(),
-                adminToken: adminToken.trim(),
                 deckId: deckId.trim() || undefined,
                 description: description.trim() || undefined,
                 defaultOgImage: defaultOgImage.trim() || undefined
@@ -192,17 +181,12 @@ export function UploadDialog({
 
 function collectSubmitErrors(
   title: string,
-  adminToken: string,
   validation: ReturnType<typeof useUpload>["validation"]
 ) {
   const errors: string[] = [];
 
   if (!title.trim()) {
     errors.push("Deck name is required.");
-  }
-
-  if (!adminToken.trim()) {
-    errors.push("Admin token is required.");
   }
 
   if (!validation) {

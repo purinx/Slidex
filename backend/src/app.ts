@@ -27,7 +27,7 @@ export function createApp(deps: AppDeps) {
     "/api/*",
     cors({
       origin: "*",
-      allowHeaders: ["Authorization", "Content-Type"],
+      allowHeaders: ["Content-Type"],
       allowMethods: ["GET", "POST", "PUT", "OPTIONS"]
     })
   );

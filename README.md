@@ -68,10 +68,7 @@ For backend upload APIs, set at least:
 
 ```text
 SLIDES_BUCKET_NAME=...
-UPLOAD_ADMIN_TOKEN=...
 ```
-
-The frontend admin upload form asks for the admin token and sends it as `Authorization: Bearer ...`.
 
 ## Common Tasks
 
@@ -113,8 +110,6 @@ cd -
 mise run tf:validate:prod
 mise run tf:plan:prod
 ```
-
-`UPLOAD_ADMIN_TOKEN` is intentionally not managed by Terraform because Terraform state would store the secret. Configure it in Amplify Console, CI secrets, SSM, or another secret store after creating the Amplify app.
 
 ## Verification
 

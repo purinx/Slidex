@@ -26,8 +26,6 @@
   - スライド HTML、関連アセット、`manifest.json`、`deck.json`、`ogp.json` を保存する。
 - AWS IAM
   - Amplify compute が S3 へアクセスするための role/policy を管理する。
-- AWS Systems Manager Parameter Store または Amplify environment variables
-  - `UPLOAD_ADMIN_TOKEN` などの secret を管理する。
 - Amazon Route 53
   - 独自ドメインを利用する場合に管理する。
 - AWS Certificate Manager
@@ -192,17 +190,6 @@ UPLOAD_MAX_DECK_SIZE_MB
 OGP_DEFAULT_IMAGE_URL
 ```
 
-secret:
-
-```text
-UPLOAD_ADMIN_TOKEN
-```
-
-`UPLOAD_ADMIN_TOKEN` は Terraform state に平文で残さない。初期方針は次のどちらかとする。
-
-- Amplify Console または CI/CD の secret 管理で手動設定する。
-- SSM Parameter Store に secure string として作成し、Amplify build/runtime に注入する。
-
 ## 9. S3 バケット設計
 
 ### 9.1 Bucket Policy
@@ -347,11 +334,9 @@ lock table: slidex-terraform-locks
 
 - S3 bucket は private。
 - public access block を有効化する。
-- secret は Terraform state に平文保存しない。
 - Amplify compute role は slides bucket への最小権限のみ持つ。
 - dev/prod はバケットと Amplify app を分離する。
 - CORS origin は環境ごとに限定する。
-- `UPLOAD_ADMIN_TOKEN` は十分な長さのランダム値にする。
 
 ## 14. 運用
 
@@ -373,7 +358,6 @@ lock table: slidex-terraform-locks
 ## 15. 未決定事項
 
 - Amplify compute role の IAM role を Terraform で完全に関連付けられるか、Amplify 側の制約確認が必要。
-- `UPLOAD_ADMIN_TOKEN` を Amplify secret、SSM Parameter Store、Secrets Manager のどれで管理するか。
 - S3 slide file の閲覧を CloudFront 経由にするか、Hono の署名付き GET URL redirect にするか。
 - 独自ドメインを初期リリースに含めるか。
 - Terraform module を最初から分けるか、初期は単一構成にするか。

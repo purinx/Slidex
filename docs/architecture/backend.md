@@ -43,7 +43,6 @@
 
 ```http
 POST /api/decks
-Authorization: Bearer {UPLOAD_ADMIN_TOKEN}
 Content-Type: application/json
 ```
 
@@ -72,7 +71,6 @@ Response:
 
 ```http
 POST /api/decks/{deckId}/uploads
-Authorization: Bearer {UPLOAD_ADMIN_TOKEN}
 Content-Type: application/json
 ```
 
@@ -116,7 +114,6 @@ Response:
 
 ```http
 POST /api/decks/{deckId}/complete
-Authorization: Bearer {UPLOAD_ADMIN_TOKEN}
 Content-Type: application/json
 ```
 
@@ -316,15 +313,7 @@ decks/{deckId}/og/default.png
 
 ## 9. 認可
 
-初期実装では `Authorization: Bearer {UPLOAD_ADMIN_TOKEN}` を利用する。
-
-対象:
-
-- `POST /api/decks`
-- `POST /api/decks/{deckId}/uploads`
-- `POST /api/decks/{deckId}/complete`
-
-読み取り API と OGP HTML は公開する。
+アップロード API、読み取り API、OGP HTML は公開する。
 
 将来拡張:
 
@@ -374,7 +363,6 @@ OGP HTML は以下を含む。
 
 主要エラーコード:
 
-- `UNAUTHORIZED`
 - `INVALID_DECK_ID`
 - `INVALID_FILE_PATH`
 - `INVALID_SLIDE_FILENAME`
@@ -408,4 +396,3 @@ OGP HTML は以下を含む。
 - OGP HTML を Hono compute で返すか、将来的に edge function へ分離するか。
 - 管理用トークンをどの secret store から注入するか。
 - アップロード完了時に既存ファイルを全削除して置換するか、差分更新するか。
-

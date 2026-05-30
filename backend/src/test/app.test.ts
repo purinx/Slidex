@@ -8,24 +8,23 @@ const env: Env = {
   awsRegion: "ap-northeast-1",
   slidesBucketName: "slides",
   slidesPrefix: "decks",
-  uploadAdminToken: "secret",
   uploadMaxFileSize: 20 * 1024 * 1024,
   uploadMaxDeckSize: 200 * 1024 * 1024,
   frontendDistDir: "/tmp/missing"
 };
 
 describe("backend app", () => {
-  it("requires admin authorization for upload endpoints", async () => {
+  it("creates a deck without upload authorization", async () => {
     const app = createApp({ env, storage: new MockStorage() });
     const response = await app.request("/api/decks", {
       method: "POST",
-      body: JSON.stringify({ title: "Demo" }),
+      body: JSON.stringify({ title: "Demo", deckId: "demo" }),
       headers: { "Content-Type": "application/json" }
     });
 
-    expect(response.status).toBe(401);
+    expect(response.status).toBe(200);
     expect(await response.json()).toMatchObject({
-      error: { code: "UNAUTHORIZED" }
+      deckId: "demo"
     });
   });
 
@@ -33,7 +32,6 @@ describe("backend app", () => {
     const storage = new MockStorage();
     const app = createApp({ env, storage });
     const headers = {
-      Authorization: "Bearer secret",
       "Content-Type": "application/json"
     };
     const files = [

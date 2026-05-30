@@ -46,7 +46,6 @@ export function useUpload(options?: { onCompleted?: (result: CompleteUploadRespo
 
   const upload = async (input: {
     title: string;
-    adminToken: string;
     description?: string;
     deckId?: string;
     defaultOgImage?: string;
@@ -64,8 +63,8 @@ export function useUpload(options?: { onCompleted?: (result: CompleteUploadRespo
         title: input.title,
         description: input.description,
         deckId: input.deckId
-      }, input.adminToken);
-      const urls = await requestUploadUrls(deck.deckId, validation.candidates, input.adminToken);
+      });
+      const urls = await requestUploadUrls(deck.deckId, validation.candidates);
       const uploadByPath = new Map(urls.uploads.map((entry) => [entry.path, entry]));
       let uploadedBytes = 0;
       const totalBytes = Math.max(validation.totalSize, 1);
@@ -91,7 +90,7 @@ export function useUpload(options?: { onCompleted?: (result: CompleteUploadRespo
         title: input.title,
         description: input.description,
         defaultOgImage: input.defaultOgImage
-      }, input.adminToken);
+      });
       setCompleted(result);
       options?.onCompleted?.(result);
       setProgress(100);
