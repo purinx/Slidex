@@ -107,6 +107,23 @@ mise run tf:validate
 mise run tf:plan
 ```
 
+## Deploy
+
+Deploy the current build to the Terraform-managed Amplify app:
+
+```sh
+mise run deploy
+```
+
+The deploy task builds the frontend and backend, creates an Amplify Hosting bundle, uploads it through Amplify's manual deployment API, and waits for the job to finish.
+
+Useful overrides:
+
+```sh
+AMPLIFY_APP_ID=... AMPLIFY_BRANCH_NAME=main mise run deploy
+DRY_RUN=1 mise run deploy
+```
+
 ## Verification
 
 Current baseline:

@@ -9,6 +9,7 @@
     "build:backend": "mise run build:backend",
     "build:frontend": "mise run build:frontend",
     "check": "mise run check",
+    "deploy": "mise run deploy",
     "test": "mise run test",
     "test:backend": "mise run test:backend",
     "test:frontend": "mise run test:frontend",

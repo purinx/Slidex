@@ -3,6 +3,8 @@ node_modules
 .pnpm-store
 dist
 frontend/.slidex-og
+.amplify-hosting/
+scripts/deploy-amplify.sh
 .env.local
 .env.*.local
 
