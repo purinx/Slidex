@@ -1,6 +1,9 @@
 locals {
-  app_name   = "${var.project_name}-${var.environment}"
-  build_spec = <<-YAML
+  app_name                  = "${var.project_name}-${var.environment}"
+  repository                = var.repository == null ? "" : trimspace(var.repository)
+  access_token              = var.access_token == null ? "" : trimspace(var.access_token)
+  has_repository_connection = local.repository != "" && local.access_token != ""
+  build_spec                = <<-YAML
     version: 1
     frontend:
       phases:
@@ -48,8 +51,8 @@ locals {
 
 resource "aws_amplify_app" "this" {
   name                  = local.app_name
-  repository            = var.repository
-  access_token          = var.access_token
+  repository            = local.has_repository_connection ? local.repository : null
+  access_token          = local.has_repository_connection ? local.access_token : null
   iam_service_role_arn  = var.iam_service_role_arn
   platform              = "WEB_COMPUTE"
   build_spec            = local.build_spec
@@ -81,7 +84,7 @@ resource "aws_amplify_branch" "this" {
   branch_name       = var.branch_name
   framework         = "React"
   stage             = upper(var.environment) == "PROD" ? "PRODUCTION" : "DEVELOPMENT"
-  enable_auto_build = var.enable_auto_branch_build
+  enable_auto_build = local.has_repository_connection && var.enable_auto_branch_build
 
   environment_variables = var.environment_variables
 

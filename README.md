@@ -90,25 +90,21 @@ mise run build:backend
 
 ## Terraform
 
-Development environment:
+Terraform manages only the production environment:
 
 ```sh
-cd infra/terraform/environments/dev
+cd infra/terraform
 cp terraform.tfvars.example terraform.tfvars
-cd -
-mise run tf:fmt
-mise run tf:validate:dev
-mise run tf:plan:dev
+terraform init
+terraform plan
 ```
 
-Production environment:
+The same commands are available through mise:
 
 ```sh
-cd infra/terraform/environments/prod
-cp terraform.tfvars.example terraform.tfvars
-cd -
-mise run tf:validate:prod
-mise run tf:plan:prod
+mise run tf:fmt
+mise run tf:validate
+mise run tf:plan
 ```
 
 ## Verification
@@ -117,6 +113,5 @@ Current baseline:
 
 ```sh
 mise run check
-mise run tf:validate:dev
-mise run tf:validate:prod
+mise run tf:validate
 ```

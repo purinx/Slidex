@@ -15,7 +15,7 @@ export type Env = {
 export function readEnv(source: NodeJS.ProcessEnv = process.env): Env {
   return {
     port: readNumber(source.PORT, 3000),
-    awsRegion: source.AWS_REGION || "ap-northeast-1",
+    awsRegion: source.SLIDES_AWS_REGION || source.VITE_S3_REGION || source.AWS_REGION || "ap-northeast-1",
     slidesBucketName: source.SLIDES_BUCKET_NAME || source.VITE_S3_BUCKET_NAME || "",
     slidesPrefix: source.SLIDES_PREFIX || source.VITE_S3_PREFIX || "decks",
     s3PublicBaseUrl: trimTrailingSlash(source.S3_PUBLIC_BASE_URL || source.VITE_S3_PUBLIC_BASE_URL),

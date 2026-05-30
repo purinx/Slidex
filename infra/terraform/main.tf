@@ -1,4 +1,6 @@
 locals {
+  slides_bucket_name = coalesce(var.slides_bucket_name, "${var.project_name}-${var.environment}-${data.aws_caller_identity.current.account_id}-slides")
+
   tags = {
     Project     = var.project_name
     Environment = var.environment
@@ -12,7 +14,7 @@ locals {
 
   amplify_environment_variables = merge(
     {
-      AWS_REGION              = var.aws_region
+      SLIDES_AWS_REGION       = var.aws_region
       SLIDES_BUCKET_NAME      = module.slide_bucket.bucket_name
       SLIDES_PREFIX           = module.slide_bucket.slides_prefix
       VITE_S3_BUCKET_NAME     = module.slide_bucket.bucket_name
@@ -28,10 +30,12 @@ locals {
   )
 }
 
-module "slide_bucket" {
-  source = "../../modules/slide_bucket"
+data "aws_caller_identity" "current" {}
 
-  bucket_name          = var.slides_bucket_name
+module "slide_bucket" {
+  source = "./modules/slide_bucket"
+
+  bucket_name          = local.slides_bucket_name
   slides_prefix        = var.slides_prefix
   cors_allowed_origins = local.cors_origins
   force_destroy        = var.force_destroy_slide_bucket
@@ -39,7 +43,7 @@ module "slide_bucket" {
 }
 
 module "iam" {
-  source = "../../modules/iam"
+  source = "./modules/iam"
 
   project_name      = var.project_name
   environment       = var.environment
@@ -49,7 +53,7 @@ module "iam" {
 }
 
 module "amplify" {
-  source = "../../modules/amplify_app"
+  source = "./modules/amplify_app"
 
   project_name             = var.project_name
   environment              = var.environment

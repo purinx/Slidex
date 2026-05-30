@@ -67,48 +67,25 @@ depends = ["typecheck", "test", "build"]
 description = "Format all Terraform files"
 run = "terraform fmt -recursive infra/terraform"
 
-[tasks."tf:init:dev"]
-description = "Initialize Terraform for dev"
-dir = "infra/terraform/environments/dev"
+[tasks."tf:init"]
+description = "Initialize Terraform"
+dir = "infra/terraform"
 run = "terraform init"
 
-[tasks."tf:validate:dev"]
-description = "Validate Terraform for dev"
-dir = "infra/terraform/environments/dev"
-depends = ["tf:init:dev"]
+[tasks."tf:validate"]
+description = "Validate Terraform"
+dir = "infra/terraform"
+depends = ["tf:init"]
 run = "terraform validate"
 
-[tasks."tf:plan:dev"]
-description = "Plan Terraform changes for dev"
-dir = "infra/terraform/environments/dev"
-depends = ["tf:init:dev"]
+[tasks."tf:plan"]
+description = "Plan Terraform changes"
+dir = "infra/terraform"
+depends = ["tf:init"]
 run = "terraform plan"
 
-[tasks."tf:apply:dev"]
-description = "Apply Terraform changes for dev"
-dir = "infra/terraform/environments/dev"
-depends = ["tf:init:dev"]
-run = "terraform apply"
-
-[tasks."tf:init:prod"]
-description = "Initialize Terraform for prod"
-dir = "infra/terraform/environments/prod"
-run = "terraform init"
-
-[tasks."tf:validate:prod"]
-description = "Validate Terraform for prod"
-dir = "infra/terraform/environments/prod"
-depends = ["tf:init:prod"]
-run = "terraform validate"
-
-[tasks."tf:plan:prod"]
-description = "Plan Terraform changes for prod"
-dir = "infra/terraform/environments/prod"
-depends = ["tf:init:prod"]
-run = "terraform plan"
-
-[tasks."tf:apply:prod"]
-description = "Apply Terraform changes for prod"
-dir = "infra/terraform/environments/prod"
-depends = ["tf:init:prod"]
+[tasks."tf:apply"]
+description = "Apply Terraform changes"
+dir = "infra/terraform"
+depends = ["tf:init"]
 run = "terraform apply"

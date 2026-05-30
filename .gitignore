@@ -5,9 +5,23 @@ dist
 frontend/.slidex-og
 .env.local
 .env.*.local
-.terraform
+
+# Terraform local state and generated files
+.terraform/
+**/.terraform/
 *.tfstate
 *.tfstate.*
+*.tfplan
+*.plan
+crash.log
+crash.*.log
+.terraform.tfstate.lock.info
 *.tfvars
+*.tfvars.json
 !*.tfvars.example
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
 .pnpm-store

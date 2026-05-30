@@ -9,8 +9,9 @@ variable "environment" {
 }
 
 variable "repository" {
-  description = "Git repository URL connected to Amplify."
+  description = "Optional Git repository URL connected to Amplify. Requires access_token when set."
   type        = string
+  default     = null
 }
 
 variable "branch_name" {
@@ -50,7 +51,7 @@ variable "sub_domain_prefix" {
 }
 
 variable "enable_auto_branch_build" {
-  description = "Whether Amplify automatically builds commits on the configured branch."
+  description = "Whether Amplify automatically builds commits on the configured branch when a repository token is configured."
   type        = bool
   default     = true
 }

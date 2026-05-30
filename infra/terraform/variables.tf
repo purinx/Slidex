@@ -7,7 +7,7 @@ variable "project_name" {
 variable "environment" {
   description = "Environment name."
   type        = string
-  default     = "dev"
+  default     = "prod"
 }
 
 variable "aws_region" {
@@ -19,6 +19,7 @@ variable "aws_region" {
 variable "slides_bucket_name" {
   description = "Private S3 bucket name for slide deck objects."
   type        = string
+  default     = null
 }
 
 variable "slides_prefix" {
@@ -28,8 +29,9 @@ variable "slides_prefix" {
 }
 
 variable "amplify_repository" {
-  description = "Git repository URL connected to Amplify."
+  description = "Optional Git repository URL connected to Amplify. Requires amplify_access_token when set."
   type        = string
+  default     = null
 }
 
 variable "amplify_branch_name" {
@@ -52,9 +54,9 @@ variable "domain_name" {
 }
 
 variable "sub_domain_prefix" {
-  description = "Subdomain prefix used when domain_name is set."
+  description = "Subdomain prefix used when domain_name is set. Empty string maps the apex."
   type        = string
-  default     = "dev"
+  default     = ""
 }
 
 variable "upload_max_file_size_mb" {
@@ -78,11 +80,11 @@ variable "ogp_default_image_url" {
 variable "cors_allowed_origins" {
   description = "Additional S3 CORS allowed origins."
   type        = list(string)
-  default     = ["http://localhost:5173", "http://127.0.0.1:5173"]
+  default     = []
 }
 
 variable "force_destroy_slide_bucket" {
-  description = "Whether Terraform may delete the non-empty dev slide bucket."
+  description = "Whether Terraform may delete the non-empty prod slide bucket."
   type        = bool
-  default     = true
+  default     = false
 }
