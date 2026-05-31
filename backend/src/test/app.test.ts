@@ -88,6 +88,26 @@ describe("backend app", () => {
       slides: [{ order: 1, title: "Intro" }]
     });
     expect(await storage.getObjectText("decks/demo/og/deck.svg")).toContain("<svg");
+
+    await storage.putObject({
+      key: "decks/demo/assets/manifest.json",
+      body: "not a deck manifest",
+      contentType: "application/json"
+    });
+
+    const decks = await app.request("/api/decks");
+    expect(decks.status).toBe(200);
+    expect(await decks.json()).toMatchObject({
+      decks: [
+        {
+          deckId: "demo",
+          title: "Demo",
+          description: "Demo deck",
+          ogImage: "/api/decks/demo/files/og/deck.svg",
+          slideCount: 1
+        }
+      ]
+    });
   });
 
   it("returns OGP HTML shell for deck routes", async () => {

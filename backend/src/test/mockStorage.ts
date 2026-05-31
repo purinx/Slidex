@@ -30,6 +30,10 @@ export class MockStorage implements ObjectStorage {
     };
   }
 
+  async listObjects(prefix: string) {
+    return [...this.objects.keys()].filter((key) => key.startsWith(prefix)).sort();
+  }
+
   async createSignedPutUrl(input: SignedUrlInput) {
     return `https://upload.example.test/${encodeURIComponent(input.key)}`;
   }

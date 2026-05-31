@@ -18,6 +18,7 @@ export type ObjectStorage = {
   getObjectText(key: string): Promise<string>;
   putObject(input: PutObjectInput): Promise<void>;
   headObject(key: string): Promise<ObjectHead>;
+  listObjects(prefix: string): Promise<string[]>;
   createSignedPutUrl(input: SignedUrlInput): Promise<string>;
   createSignedGetUrl(input: SignedUrlInput): Promise<string>;
 };

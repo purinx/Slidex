@@ -1,6 +1,7 @@
 import {
   GetObjectCommand,
   HeadObjectCommand,
+  ListObjectsV2Command,
   PutObjectCommand,
   S3Client,
   type S3ClientConfig
@@ -56,6 +57,31 @@ export class S3ObjectStorage implements ObjectStorage {
     return {
       contentLength: result.ContentLength
     };
+  }
+
+  async listObjects(prefix: string) {
+    const keys: string[] = [];
+    let continuationToken: string | undefined;
+
+    do {
+      const result = await this.client.send(
+        new ListObjectsV2Command({
+          Bucket: this.bucket,
+          Prefix: prefix,
+          ContinuationToken: continuationToken
+        })
+      );
+
+      for (const object of result.Contents ?? []) {
+        if (object.Key) {
+          keys.push(object.Key);
+        }
+      }
+
+      continuationToken = result.NextContinuationToken;
+    } while (continuationToken);
+
+    return keys;
   }
 
   async createSignedPutUrl(input: SignedUrlInput) {

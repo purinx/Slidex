@@ -1,3 +1,4 @@
+import { apiFetch } from "./apiClient";
 import { fetchDeckManifest } from "./s3ManifestSlideSource";
 import type { DeckSummary } from "../domain/slideManifest";
 
@@ -15,20 +16,25 @@ export async function fetchDeckList(): Promise<DeckSummary[]> {
     return body.decks ?? [];
   }
 
-  const defaultDeckId = import.meta.env.VITE_DEFAULT_DECK_ID;
-  if (!defaultDeckId) {
-    return [];
-  }
-
-  const manifest = await fetchDeckManifest(defaultDeckId);
-  return [
-    {
-      deckId: manifest.deckId || defaultDeckId,
-      title: manifest.title,
-      description: manifest.description,
-      ogImage: manifest.ogImage,
-      slideCount: manifest.slides.length,
-      warnings: manifest.warnings
+  try {
+    const body = await apiFetch<{ decks?: DeckSummary[] }>("/api/decks");
+    return body.decks ?? [];
+  } catch {
+    const defaultDeckId = import.meta.env.VITE_DEFAULT_DECK_ID;
+    if (!defaultDeckId) {
+      return [];
     }
-  ];
+
+    const manifest = await fetchDeckManifest(defaultDeckId);
+    return [
+      {
+        deckId: manifest.deckId || defaultDeckId,
+        title: manifest.title,
+        description: manifest.description,
+        ogImage: manifest.ogImage,
+        slideCount: manifest.slides.length,
+        warnings: manifest.warnings
+      }
+    ];
+  }
 }

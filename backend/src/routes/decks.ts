@@ -17,6 +17,30 @@ export type DeckRouteDeps = {
 export function createDeckRoutes(deps: DeckRouteDeps) {
   const app = new Hono();
 
+  app.get("/", async (c) => {
+    const manifestKeys = (await deps.storage.listObjects(listPrefix(deps.env.slidesPrefix))).filter((key) =>
+      isDeckManifestKey(key, deps.env.slidesPrefix)
+    );
+    const decks = await Promise.all(
+      manifestKeys.map(async (key) => {
+        const manifest = JSON.parse(await deps.storage.getObjectText(key)) as SlideManifest;
+        const deckId = manifest.deckId || deckIdFromManifestKey(key, deps.env.slidesPrefix);
+
+        return {
+          deckId,
+          title: manifest.title,
+          description: manifest.description,
+          ogImage: manifest.ogImage,
+          slideCount: manifest.slides.length
+        };
+      })
+    );
+
+    return c.json({
+      decks: decks.sort((a, b) => a.title.localeCompare(b.title))
+    });
+  });
+
   app.post("/", async (c) => {
     const body = await readJson<CreateDeckBody>(c.req.raw);
     const title = requireString(body.title, "title");
@@ -169,6 +193,33 @@ function validateMetadata(metadata?: DeckMetadataInput) {
 
 function deckMetadataLine(slideCount: number, deckId: string) {
   return `${slideCount} ${slideCount === 1 ? "slide" : "slides"} · ${deckId}`;
+}
+
+function listPrefix(prefix: string) {
+  const cleanPrefix = prefix.replace(/^\/+|\/+$/g, "");
+  return cleanPrefix ? `${cleanPrefix}/` : "";
+}
+
+function deckIdFromManifestKey(key: string, prefix: string) {
+  const cleanPrefix = prefix.replace(/^\/+|\/+$/g, "");
+  const withoutPrefix = cleanPrefix && key.startsWith(`${cleanPrefix}/`) ? key.slice(cleanPrefix.length + 1) : key;
+  return validateDeckId(withoutPrefix.split("/")[0] ?? "");
+}
+
+function isDeckManifestKey(key: string, prefix: string) {
+  const cleanPrefix = prefix.replace(/^\/+|\/+$/g, "");
+  const withoutPrefix = cleanPrefix && key.startsWith(`${cleanPrefix}/`) ? key.slice(cleanPrefix.length + 1) : key;
+  const parts = withoutPrefix.split("/");
+  if (parts.length !== 2 || parts[1] !== "manifest.json") {
+    return false;
+  }
+
+  try {
+    validateDeckId(parts[0] ?? "");
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function requireString(value: unknown, field: string) {
