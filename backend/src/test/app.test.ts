@@ -1,3 +1,6 @@
+import fs from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { createApp } from "../app.js";
 import type { Env } from "../infra/env.js";
@@ -89,6 +92,14 @@ describe("backend app", () => {
     });
     expect(await storage.getObjectText("decks/demo/og/deck.svg")).toContain("<svg");
 
+    const file = await app.request("/api/decks/demo/files/01__Intro.html");
+    expect(file.status).toBe(302);
+    expect(file.headers.get("location")).toBe("https://download.example.test/decks%2Fdemo%2F01__Intro.html");
+
+    const ogImage = await app.request("/api/decks/demo/files/og/deck.svg");
+    expect(ogImage.status).toBe(302);
+    expect(ogImage.headers.get("location")).toBe("https://download.example.test/decks%2Fdemo%2Fog%2Fdeck.svg");
+
     await storage.putObject({
       key: "decks/demo/assets/manifest.json",
       body: "not a deck manifest",
@@ -130,5 +141,44 @@ describe("backend app", () => {
     expect(response.status).toBe(200);
     expect(html).toContain("Intro description");
     expect(html).toContain('property="og:title"');
+  });
+
+  it("preserves frontend assets in OGP HTML shell", async () => {
+    const frontendDistDir = await fs.mkdtemp(path.join(os.tmpdir(), "slidex-frontend-dist-"));
+    await fs.writeFile(
+      path.join(frontendDistDir, "index.html"),
+      `<!doctype html>
+<html lang="ja">
+  <head>
+    <title>SlideX</title>
+    <script type="module" crossorigin src="/assets/index-test.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-test.css">
+  </head>
+  <body><div id="root"></div></body>
+</html>`
+    );
+
+    try {
+      const storage = new MockStorage();
+      await storage.putObject({
+        key: "decks/demo/ogp.json",
+        contentType: "application/json",
+        body: JSON.stringify({
+          deck: { title: "Demo", description: "Deck description" },
+          slides: {}
+        })
+      });
+
+      const app = createApp({ env: { ...env, frontendDistDir }, storage });
+      const response = await app.request("/deck/demo");
+      const html = await response.text();
+
+      expect(response.status).toBe(200);
+      expect(html).toContain("/assets/index-test.js");
+      expect(html).toContain("/assets/index-test.css");
+      expect(html).toContain('property="og:title"');
+    } finally {
+      await fs.rm(frontendDistDir, { recursive: true, force: true });
+    }
   });
 });

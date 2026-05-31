@@ -54,6 +54,7 @@ pnpm --dir "$ROOT_DIR/backend" build
 echo "Packaging backend Lambda..."
 mkdir -p "$LAMBDA_DIR"
 cp -R "$ROOT_DIR/backend/dist" "$LAMBDA_DIR/dist"
+cp -R "$ROOT_DIR/frontend/dist" "$LAMBDA_DIR/frontend-dist"
 node - "$ROOT_DIR/backend/package.json" "$LAMBDA_DIR/package.json" <<'NODE'
 const fs = require("node:fs");
 const [sourcePath, targetPath] = process.argv.slice(2);
