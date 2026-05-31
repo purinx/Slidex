@@ -530,6 +530,32 @@ html[data-slide-transition="previous"]::view-transition-new(slide-stage) {
   color: #5d6b7f;
 }
 
+.adminTitleBlock {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.backLink {
+  display: inline-flex;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #c9d4e2;
+  border-radius: 7px;
+  background: #fff;
+}
+
+.backLinkIcon {
+  width: 10px;
+  height: 10px;
+  border-bottom: 2px solid #172033;
+  border-left: 2px solid #172033;
+  transform: translateX(2px) rotate(45deg);
+}
+
 .primaryLink {
   display: inline-flex;
   min-height: 38px;

@@ -14,9 +14,14 @@ export function AdminApp() {
   return (
     <main className="adminShell">
       <section className="adminHeader">
-        <div>
-          <h1>New Deck</h1>
-          <p>Upload decks and inspect manifest data outside the presentation surface.</p>
+        <div className="adminTitleBlock">
+          <a className="backLink" href="/" aria-label="Back to decks" title="Back to decks">
+            <span className="backLinkIcon" aria-hidden="true" />
+          </a>
+          <div>
+            <h1>New Deck</h1>
+            <p>Upload decks and inspect manifest data outside the presentation surface.</p>
+          </div>
         </div>
       </section>
 
