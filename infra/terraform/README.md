@@ -2,9 +2,11 @@
 
 Terraform manages the AWS infrastructure for SlideX:
 
+- S3 bucket for frontend build assets
+- CloudFront distribution in front of the app
+- Lambda Function URL backend for `/api/*` and `/deck/*`
 - private S3 bucket for uploaded slide decks
-- IAM role and policy for Amplify compute access to S3
-- Amplify Hosting app, branch, build spec, and optional custom domain
+- IAM role and policy for Lambda access to slide storage
 
 ## Layout
 
@@ -14,9 +16,8 @@ infra/terraform/
 ├── variables.tf
 ├── outputs.tf
 ├── versions.tf
+├── lambda-placeholder/
 └── modules/
-    ├── amplify_app/
-    ├── iam/
     └── slide_bucket/
 ```
 
@@ -41,13 +42,22 @@ mise run tf:validate
 mise run tf:plan
 ```
 
-If you use the Amplify default domain for browser uploads, add the emitted `amplify_branch_url` origin to `cors_allowed_origins` and apply again. Custom domains are added to CORS automatically when `domain_name` is set.
+Deploy frontend and backend code after `terraform apply`:
 
-By default Terraform creates the Amplify app without connecting a Git repository. To connect GitHub during `terraform apply`, set both `amplify_repository` and `amplify_access_token`; otherwise connect the repository later from the Amplify Console.
+```sh
+mise run deploy
+```
+
+## Routing
+
+CloudFront routes requests as follows:
+
+- `/api/*` to Lambda
+- `/deck/*` to Lambda for OGP-aware HTML
+- all other frontend routes to S3, with SPA paths rewritten to `/index.html`
 
 ## Notes
 
-- The backend reads Vite's built `index.html` from `FRONTEND_DIST_DIR=./frontend-dist` inside the Amplify compute bundle so `/deck/*` can return OGP tags plus the SPA shell.
-- S3 buckets are private with public access blocked and versioning enabled.
-- Terraform manages only the production environment.
-- `force_destroy_slide_bucket` defaults to `false`.
+- The Lambda placeholder lets Terraform create the function before the real backend bundle exists.
+- The deploy script replaces the Lambda code package and uploads frontend assets.
+- The slide bucket is private with public access blocked and versioning enabled.

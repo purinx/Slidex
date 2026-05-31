@@ -2,9 +2,12 @@ tmp
 node_modules
 .pnpm-store
 dist
+!infra/terraform/lambda-placeholder/
+!infra/terraform/lambda-placeholder/dist/
+!infra/terraform/lambda-placeholder/dist/lambda.js
 frontend/.slidex-og
 .amplify-hosting/
-scripts/deploy-amplify.sh
+scripts/deploy-lambda.sh
 .env.local
 .env.*.local
 

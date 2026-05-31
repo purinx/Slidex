@@ -64,8 +64,8 @@ description = "Run typecheck, tests, and builds"
 depends = ["typecheck", "test", "build"]
 
 [tasks.deploy]
-description = "Build and manually deploy the Amplify app"
-run = "scripts/deploy-amplify.sh"
+description = "Build and deploy the CloudFront/S3/Lambda app"
+run = "scripts/deploy-lambda.sh"
 
 [tasks."tf:fmt"]
 description = "Format all Terraform files"

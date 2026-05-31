@@ -11,9 +11,15 @@ variable "environment" {
 }
 
 variable "aws_region" {
-  description = "AWS region for all resources."
+  description = "AWS region for regional resources."
   type        = string
   default     = "ap-northeast-1"
+}
+
+variable "frontend_bucket_name" {
+  description = "S3 bucket name for frontend assets. Defaults to a project/account based name."
+  type        = string
+  default     = null
 }
 
 variable "slides_bucket_name" {
@@ -26,37 +32,6 @@ variable "slides_prefix" {
   description = "Prefix under the slides bucket where deck objects are stored."
   type        = string
   default     = "decks"
-}
-
-variable "amplify_repository" {
-  description = "Optional Git repository URL connected to Amplify. Requires amplify_access_token when set."
-  type        = string
-  default     = null
-}
-
-variable "amplify_branch_name" {
-  description = "Git branch deployed by Amplify."
-  type        = string
-  default     = "main"
-}
-
-variable "amplify_access_token" {
-  description = "Optional repository access token. Prefer configuring repository access outside Terraform."
-  type        = string
-  default     = null
-  sensitive   = true
-}
-
-variable "domain_name" {
-  description = "Optional custom domain name."
-  type        = string
-  default     = null
-}
-
-variable "sub_domain_prefix" {
-  description = "Subdomain prefix used when domain_name is set. Empty string maps the apex."
-  type        = string
-  default     = ""
 }
 
 variable "upload_max_file_size_mb" {
@@ -78,13 +53,37 @@ variable "ogp_default_image_url" {
 }
 
 variable "cors_allowed_origins" {
-  description = "Additional S3 CORS allowed origins."
+  description = "S3 CORS allowed origins for browser direct uploads."
   type        = list(string)
-  default     = []
+  default     = ["*"]
 }
 
 variable "force_destroy_slide_bucket" {
-  description = "Whether Terraform may delete the non-empty prod slide bucket."
+  description = "Whether Terraform may delete the non-empty slide bucket."
   type        = bool
   default     = false
+}
+
+variable "force_destroy_frontend_bucket" {
+  description = "Whether Terraform may delete the non-empty frontend bucket."
+  type        = bool
+  default     = true
+}
+
+variable "lambda_memory_size" {
+  description = "Backend Lambda memory size in MB."
+  type        = number
+  default     = 512
+}
+
+variable "lambda_timeout_seconds" {
+  description = "Backend Lambda timeout in seconds."
+  type        = number
+  default     = 30
+}
+
+variable "cloudfront_price_class" {
+  description = "CloudFront price class."
+  type        = string
+  default     = "PriceClass_200"
 }

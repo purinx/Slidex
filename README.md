@@ -16,7 +16,7 @@ The frontend renders each slide in an iframe. Local development reads files from
 
 - Frontend: Vite, React, TypeScript
 - Backend: Hono, Node.js, AWS SDK v3
-- Infrastructure: Terraform, AWS Amplify Hosting, S3, IAM
+- Infrastructure: Terraform, CloudFront, S3, Lambda, IAM
 - Tooling: mise, pnpm, Vitest
 
 ## Repository
@@ -109,18 +109,18 @@ mise run tf:plan
 
 ## Deploy
 
-Deploy the current build to the Terraform-managed Amplify app:
+Deploy the current build to the Terraform-managed CloudFront/S3/Lambda stack:
 
 ```sh
 mise run deploy
 ```
 
-The deploy task builds the frontend and backend, creates an Amplify Hosting bundle, uploads it through Amplify's manual deployment API, and waits for the job to finish.
+The deploy task builds the frontend and backend, syncs frontend assets to S3, updates the backend Lambda function, and creates a CloudFront invalidation.
 
 Useful overrides:
 
 ```sh
-AMPLIFY_APP_ID=... AMPLIFY_BRANCH_NAME=main mise run deploy
+FRONTEND_BUCKET_NAME=... LAMBDA_FUNCTION_NAME=... CLOUDFRONT_DISTRIBUTION_ID=... mise run deploy
 DRY_RUN=1 mise run deploy
 ```
 
