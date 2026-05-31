@@ -7,7 +7,6 @@ dist
 !infra/terraform/lambda-placeholder/dist/lambda.js
 frontend/.slidex-og
 .amplify-hosting/
-scripts/deploy-lambda.sh
 .env.local
 .env.*.local
 
